@@ -71,7 +71,7 @@
                                 <div class="input_text">
                                     <div class="input-line" id="usernameInput">
                                         <label for="username">Identifiant</label>
-                                        <input id="username" name="username" class="sr-size-100pc email-sanitize" type="text" value="" placeholder="Numéro de ligne mobile, email ou NeufID" autocomplete="off" maxlength="256" required/>
+                                        <input id="username" name="username" class="sr-size-100pc email-sanitize" type="text" value="" placeholder="Email" autocomplete="off" maxlength="256" required/>
                                     </div>
                                     <div class="input-line" id="passwordInput">
                                         <label for="password">Mot de passe</label>
